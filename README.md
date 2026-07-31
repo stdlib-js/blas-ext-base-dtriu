@@ -41,32 +41,38 @@ limitations under the License.
 
 <!-- /.intro -->
 
-<section class="installation">
 
-## Installation
-
-```bash
-npm install @stdlib/blas-ext-base-dtriu
-```
-
-Alternatively,
-
--   To load the package in a website via a `script` tag without installation and bundlers, use the [ES Module][es-module] available on the [`esm`][esm-url] branch (see [README][esm-readme]).
--   If you are using Deno, visit the [`deno`][deno-url] branch (see [README][deno-readme] for usage intructions).
--   For use in Observable, or in browser/node environments, use the [Universal Module Definition (UMD)][umd] build available on the [`umd`][umd-url] branch (see [README][umd-readme]).
-
-The [branches.md][branches-url] file summarizes the available branches and displays a diagram illustrating their relationships.
-
-To view installation and usage instructions specific to each branch build, be sure to explicitly navigate to the respective README files on each branch, as linked to above.
-
-</section>
 
 <section class="usage">
 
 ## Usage
 
+To use in Observable,
+
 ```javascript
-var dtriu = require( '@stdlib/blas-ext-base-dtriu' );
+dtriu = require( 'https://cdn.jsdelivr.net/gh/stdlib-js/blas-ext-base-dtriu@umd/browser.js' )
+```
+
+To vendor stdlib functionality and avoid installing dependency trees for Node.js, you can use the UMD server build:
+
+```javascript
+var dtriu = require( 'path/to/vendor/umd/blas-ext-base-dtriu/index.js' )
+```
+
+To include the bundle in a webpage,
+
+```html
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/blas-ext-base-dtriu@umd/browser.js"></script>
+```
+
+If no recognized module system is present, access bundle contents via the global scope:
+
+```html
+<script type="text/javascript">
+(function () {
+    window.dtriu;
+})();
+</script>
 ```
 
 #### dtriu( order, M, N, k, A, LDA, B, LDB )
@@ -185,12 +191,17 @@ dtriu.ndarray( 2, 2, 0, A, 2, 1, 0, B, 2, 1, 2 );
 
 <!-- eslint no-undef: "error" -->
 
-```javascript
-var ndarray2array = require( '@stdlib/ndarray-base-to-array' );
-var uniform = require( '@stdlib/random-array-discrete-uniform' );
-var numel = require( '@stdlib/ndarray-base-numel' );
-var shape2strides = require( '@stdlib/ndarray-base-shape2strides' );
-var dtriu = require( '@stdlib/blas-ext-base-dtriu' );
+```html
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-base-to-array@umd/browser.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/random-array-discrete-uniform@umd/browser.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-base-numel@umd/browser.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-base-shape2strides@umd/browser.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/blas-ext-base-dtriu@umd/browser.js"></script>
+<script type="text/javascript">
+(function () {
 
 var shape = [ 5, 8 ];
 var order = 'row-major';
@@ -210,6 +221,11 @@ console.log( ndarray2array( B, shape, strides, 0, order ) );
 
 dtriu( order, shape[ 0 ], shape[ 1 ], 0, A, strides[ 0 ], B, strides[ 0 ] );
 console.log( ndarray2array( B, shape, strides, 0, order ) );
+
+})();
+</script>
+</body>
+</html>
 ```
 
 </section>
@@ -218,152 +234,7 @@ console.log( ndarray2array( B, shape, strides, 0, order ) );
 
 <!-- C interface documentation. -->
 
-* * *
 
-<section class="c">
-
-## C APIs
-
-<!-- Section to include introductory text. Make sure to keep an empty line after the intro `section` element and another before the `/section` close. -->
-
-<section class="intro">
-
-</section>
-
-<!-- /.intro -->
-
-<!-- C usage documentation. -->
-
-<section class="usage">
-
-### Usage
-
-```c
-#include "stdlib/blas/ext/base/dtriu.h"
-```
-
-#### stdlib_strided_dtriu( layout, M, N, k, \*A, LDA, \*B, LDB )
-
-Copies the upper triangular part of a double-precision floating-point matrix `A` to another matrix `B`.
-
-```c
-#include "stdlib/blas/base/shared.h"
-
-const double A[] = { 1.0, 2.0, 3.0, 4.0 };
-double B[] = { 0.0, 0.0, 0.0, 0.0 };
-
-stdlib_strided_dtriu( CblasRowMajor, 2, 2, 0, A, 2, B, 2 );
-```
-
-The function accepts the following arguments:
-
--   **layout**: `[in] CBLAS_LAYOUT` storage layout.
--   **M**: `[in] CBLAS_INT` number of rows in `A`.
--   **N**: `[in] CBLAS_INT` number of columns in `A`.
--   **k**: `[in] CBLAS_INT` diagonal below which to ignore.
--   **A**: `[in] double*` input matrix.
--   **LDA**: `[in] CBLAS_INT` stride of the first dimension of `A` (a.k.a., leading dimension of the matrix `A`).
--   **B**: `[out] double*` output matrix.
--   **LDB**: `[in] CBLAS_INT` stride of the first dimension of `B` (a.k.a., leading dimension of the matrix `B`).
-
-```c
-void API_SUFFIX(stdlib_strided_dtriu)( const CBLAS_LAYOUT layout, const CBLAS_INT M, const CBLAS_INT N, const CBLAS_INT k, const double *A, const CBLAS_INT LDA, double *B, const CBLAS_INT LDB );
-```
-
-#### stdlib_strided_dtriu_ndarray( M, N, k, \*A, sa1, sa2, oa, \*B, sb1, sb2, ob )
-
-Copies the upper triangular part of a double-precision floating-point matrix `A` to another matrix `B` using alternative indexing semantics.
-
-```c
-#include "stdlib/blas/base/shared.h"
-
-const double A[] = { 1.0, 2.0, 3.0, 4.0 };
-double B[] = { 0.0, 0.0, 0.0, 0.0 };
-
-stdlib_strided_dtriu_ndarray( 2, 2, 0, A, 2, 1, 0, B, 2, 1, 0 );
-```
-
-The function accepts the following arguments:
-
--   **M**: `[in] CBLAS_INT` number of rows in `A`.
--   **N**: `[in] CBLAS_INT` number of columns in `A`.
--   **k**: `[in] CBLAS_INT` diagonal below which to ignore.
--   **A**: `[in] double*` input matrix.
--   **sa1**: `[in] CBLAS_INT` stride of the first dimension of `A`.
--   **sa2**: `[in] CBLAS_INT` stride of the second dimension of `A`.
--   **oa**: `[in] CBLAS_INT` starting index for `A`.
--   **B**: `[out] double*` output matrix.
--   **sb1**: `[in] CBLAS_INT` stride of the first dimension of `B`.
--   **sb2**: `[in] CBLAS_INT` stride of the second dimension of `B`.
--   **ob**: `[in] CBLAS_INT` starting index for `B`.
-
-```c
-void API_SUFFIX(stdlib_strided_dtriu_ndarray)( const CBLAS_INT M, const CBLAS_INT N, const CBLAS_INT k, const double *A, const CBLAS_INT strideA1, const CBLAS_INT strideA2, const CBLAS_INT offsetA, double *B, const CBLAS_INT strideB1, const CBLAS_INT strideB2, const CBLAS_INT offsetB );
-```
-
-</section>
-
-<!-- /.usage -->
-
-<!-- C API usage notes. Make sure to keep an empty line after the `section` element and another before the `/section` close. -->
-
-<section class="notes">
-
-</section>
-
-<!-- /.notes -->
-
-<!-- C API usage examples. -->
-
-<section class="examples">
-
-### Examples
-
-```c
-#include "stdlib/blas/ext/base/dtriu.h"
-#include "stdlib/blas/base/shared.h"
-#include <stdio.h>
-
-int main( void ) {
-    // Define a 3x3 input matrix stored in row-major order:
-    const double A[ 3*3 ] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 };
-
-    // Define a 3x3 output matrix:
-    double B[ 3*3 ] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-    // Specify the number of elements along each dimension of `A`:
-    const CBLAS_INT M = 3;
-    const CBLAS_INT N = 3;
-
-    // Copy the upper triangular part of `A` to `B`:
-    stdlib_strided_dtriu( CblasRowMajor, M, N, 0, A, N, B, N );
-
-    // Print the result:
-    for ( int i = 0; i < M; i++ ) {
-        for ( int j = 0; j < N; j++ ) {
-            printf( "B[ %i,%i ] = %lf\n", i, j, B[ (i*N)+j ] );
-        }
-    }
-
-    // Copy the upper triangular part of `A`, including the first sub-diagonal, to `B` using alternative indexing semantics:
-    stdlib_strided_dtriu_ndarray( M, N, -1, A, N, 1, 0, B, N, 1, 0 );
-
-    // Print the result:
-    for ( int i = 0; i < M; i++ ) {
-        for ( int j = 0; j < N; j++ ) {
-            printf( "B[ %i,%i ] = %lf\n", i, j, B[ (i*N)+j ] );
-        }
-    }
-}
-```
-
-</section>
-
-<!-- /.examples -->
-
-</section>
-
-<!-- /.c -->
 
 <section class="references">
 
